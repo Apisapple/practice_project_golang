@@ -1,0 +1,19 @@
+package main
+
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
+
+func main() {
+	fmt.Println("=======================================================")
+	fmt.Println("=================== START SERVER ======================")
+	fmt.Println("=======================================================")
+
+	http.HandleFunc("/", index)
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+func index(w http.ResponseWriter, r *http.Request) {
+}

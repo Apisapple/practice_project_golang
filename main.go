@@ -2,18 +2,27 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
+
+	router "example.com/practice/router"
 )
 
 func main() {
-	fmt.Println("=======================================================")
-	fmt.Println("=================== START SERVER ======================")
-	fmt.Println("=======================================================")
-
-	http.HandleFunc("/", index)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	printBanner()
+	router.StartRouter()
+	// http.HandleFunc("/", index)
+	// log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
+}
+
+func printBanner() {
+	fmt.Println("=======================================================")
+	fmt.Println("=================== START SERVER ======================")
+	fmt.Println("=======================================================")
+}
+
+func startRouter() {
+
 }

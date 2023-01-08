@@ -1,4 +1,6 @@
-type message struct {
+package model
+
+type Message struct {
 	ID  string `json:"id"`
-	Meg string `json:"msg"`
+	Msg string `json:"msg"`
 }

@@ -2,22 +2,27 @@ package router
 
 import (
 	"log"
-	"net/http"
+	"strconv"
 
+	db "example.com/practice/db"
 	"github.com/gin-gonic/gin"
 )
 
 func StartRouter() {
 	router := gin.Default()
 
-	router.GET("/", func(c *gin.Context) {
-		log.Fatal("Start GO LANG Server~!!!")
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"title": "Main Title",
-		})
+	router.GET("/message/:id", func(c *gin.Context) {
+		log.Fatal("Calling GET")
+		id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+
+		if err != nil {
+			panic(err)
+		}
+
+		db.GetMessage(id)
 	})
 
-	router.GET("/message", func(c *gin.Context) {
+	router.POST("/message", func(c *gin.Context) {
 
 	})
 

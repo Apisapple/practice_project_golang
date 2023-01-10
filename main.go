@@ -22,7 +22,3 @@ func printBanner() {
 	fmt.Println("=================== START SERVER ======================")
 	fmt.Println("=======================================================")
 }
-
-func startRouter() {
-
-}

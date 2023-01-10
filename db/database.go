@@ -4,15 +4,16 @@ import (
 	"database/sql"
 	"fmt"
 
+	model "example.com/practice/model"
 	_ "github.com/lib/pq"
 )
 
 const (
 	host     = "localhost"
 	port     = 5432
-	user     = "root"
-	password = "root"
-	dbname   = "practice_db"
+	user     = "postgres"
+	password = "postgres"
+	dbname   = "postgres"
 )
 
 func connect() *sql.DB {
@@ -26,23 +27,55 @@ func connect() *sql.DB {
 		panic(err.Error())
 	}
 
-	defer dbcon.Close()
-
 	return dbcon
 }
 
-func GetMessage(id uint64) {
+func GetMessage(id string) {
+	db := connect()
 
+	rows, err := db.Query(`SELECT "Name", "Roll" FROM "Students"`)
+	checkError(err)
+
+	defer rows.Close()
+	defer db.Close()
+
+	for rows.Next() {
+	}
 }
 
-func SaveMessage() {
-
+func SaveMessage(msg model.Message) sql.Result {
+	db := connect()
+	if db.Ping() != nil {
+		panic(db.Ping().Error())
+	}
+	insertDynStmt := `insert into Message ("id", "msg") values($1, $2)`
+	result, err := db.Exec(insertDynStmt, msg.ID, msg.Msg)
+	checkError(err)
+	defer db.Close()
+	return result
 }
 
-func UpdateMessage() {
+func UpdateMessage(msg model.Message) sql.Result {
+	db := connect()
+	if db.Ping() != nil {
+		panic(db.Ping().Error())
+	}
 
+	updateDynStmt := `update Message set "msg"=$1 where "id"=$2`
+	result, err := db.Exec(updateDynStmt, msg.Msg, msg.ID)
+
+	checkError(err)
+	defer db.Close()
+
+	return result
 }
 
 func DeleteMessage() {
 
+}
+
+func checkError(err error) {
+	if err != nil {
+		panic(err)
+	}
 }

@@ -30,17 +30,27 @@ func connect() *sql.DB {
 	return dbcon
 }
 
-func GetMessage(id string) {
+func GetMessage(id string) []model.Message {
 	db := connect()
+	selectDynStmt := `SELECT id, msg FROM Message where "id"=$1`
+	rows, err := db.Query(selectDynStmt, id)
 
-	rows, err := db.Query(`SELECT "Name", "Roll" FROM "Students"`)
+	messages := []model.Message{}
+
 	checkError(err)
-
-	defer rows.Close()
 	defer db.Close()
+	defer rows.Close()
 
 	for rows.Next() {
+		var msg model.Message
+		if err := rows.Scan(&msg.ID, &msg.Msg); err != nil {
+			panic(err)
+		}
+
+		messages = append(messages, msg)
 	}
+
+	return messages
 }
 
 func SaveMessage(msg model.Message) sql.Result {
@@ -70,12 +80,24 @@ func UpdateMessage(msg model.Message) sql.Result {
 	return result
 }
 
-func DeleteMessage() {
+func DeleteMessage(id string) sql.Result {
+	db := connect()
+	if db.Ping() != nil {
+		panic(db.Ping().Error())
+	}
 
+	deleteDynStmt := `delete from Message where "id"=$1`
+	result, err := db.Exec(deleteDynStmt, id)
+	checkError(err)
+
+	defer db.Close()
+
+	return result
 }
 
 func checkError(err error) {
 	if err != nil {
 		panic(err)
 	}
+
 }
